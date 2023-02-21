@@ -12,7 +12,7 @@ export function ListCompany() {
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-16 md:gap-4">
       {listCompanies?.map((company: Company) => {
         return <CompanyComponent company={company} key={company.id} />;
       })}

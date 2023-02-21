@@ -1,35 +1,36 @@
 import { parseCookies } from "nookies";
 import { api } from "../../service/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { url } from "inspector";
+import { useRecoverUserData } from "../auth/recoveryUserData";
 
-export default async function useUpadateAvatarCompany(avatarUrl: string,companyId: string, file: File){
-    const queryClient = useQueryClient();
+export function useUpadateAvatarCompany(){
     const { "auth.token": token } = parseCookies();
-
+    const queryClient = useQueryClient();
+    const {authUser} = useRecoverUserData()
     const {
         data: companyAvatar,
         isError: errorCompanyAvatar,
         isLoading: companyAvatarIsLoading,
         mutate: companyAvatarMutate
       } = useMutation({
-        mutationFn: () => {
-            return   api
-            .put("/company/updateAvatar", {
-                avatarUrl,
-                companyId
-            }, {
+        mutationFn: async (avatarUrl: any) => {
+            return api.put(`/company/updateAvatar`, {
+                avatarUrl: avatarUrl,
+                companyId: authUser?.id
+            }, 
+            {
                 headers: {
-                Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             })
             .then((resp) => resp.data)
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(["listDevelopers"])
             queryClient.invalidateQueries(["recoveryAccountData"])
+            queryClient.invalidateQueries(["listCompanies"])
         }
-      }
-      )
+      })
 
     return {companyAvatar, errorCompanyAvatar, companyAvatarIsLoading, companyAvatarMutate}
 }

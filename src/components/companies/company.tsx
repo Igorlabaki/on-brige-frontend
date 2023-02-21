@@ -17,15 +17,17 @@ export function CompanyComponent({ company }: companyProps) {
 
   return (
     <CardComponent>
-      <div className="flex relative w-full">
-        <AvatarComponent
-          onClick={() => push(`/company/${company?.id}`)}
-          avatar={company?.avatar}
-          entityName={"company"}
-          icon={
-            <FaReact className="text-veryDarkGraishCyan text-[30px] md:text-[35px]" />
-          }
-        />
+      <div className="flex relative w-full ">
+        <div className="absolute top-[3.5rem] md:relative md:top-0">
+          <AvatarComponent
+            onClick={() => push(`/company/${company?.id}`)}
+            avatar={company?.avatar}
+            entityName={"company"}
+            icon={
+              <FaReact className="text-veryDarkGraishCyan text-[30px] md:text-[35px]" />
+            }
+          />
+        </div>
         <div
           className={`space-y-1 pt-3 md:pt-0 flex flex-col justify-start items-start w-full`}
         >

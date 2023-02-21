@@ -20,4 +20,13 @@ export interface IMoodalsContextRepository {
   isUpdateJobModalOpen?: boolean;
   handleOpenUpdateJobModal?: () => void;
   handleCloseUpdateJobModal?: () => void;
+
+  iJobMenuModalOpen?: boolean;
+  handleOpenJobMenuModal?: () => void;
+  handleCloseJobMenuModal?: () => void;
+  
+  
+  iSkillMatchModalOpen?: boolean;
+  handleOpenSkillMatchModal?: () => void;
+  handleCloseSkillMatchModal?: () => void;
 }

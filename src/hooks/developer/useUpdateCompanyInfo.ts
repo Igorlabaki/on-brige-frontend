@@ -1,10 +1,11 @@
 import { parseCookies } from "nookies";
 import { api } from "../../service/axios";
 import { useMutation, useQueryClient } from "react-query";
+import { Link } from "../../Interfaces";
 
 interface UseUpadateCompanyInfoProps{
     bodyReq:{
-        companyId: string | undefined , name: string | undefined,about: string | undefined,email: string | undefined,cityName: string | undefined,countryName: string | undefined
+        companyId: string | undefined , name: string | undefined,about: string | undefined,email: string | undefined,cityName: string | undefined,countryName: string | undefined,linkList: Link[]
     },
     handleClose?: () =>  void;
 }
@@ -12,7 +13,7 @@ interface UseUpadateCompanyInfoProps{
 export default function useUpadateCompanyInfo({bodyReq, handleClose}: UseUpadateCompanyInfoProps){
     const queryClient = useQueryClient();
     const { "auth.token": token } = parseCookies();
-
+    
     const {
         data: companyInfo,
         isError: errorCompanyInfo,

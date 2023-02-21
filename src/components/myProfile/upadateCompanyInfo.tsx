@@ -3,7 +3,6 @@ import { ButtonComponent } from "../util/button";
 import { CountryListComponent } from "../util/countryList";
 import { useRecoverUserData } from "../../hooks/auth/recoveryUserData";
 import useUpadateCompanyInfo from "../../hooks/company/useUpdateCompanyInfo";
-
 interface UpadateCompanyProps {
   handleEditModeClose: () => void;
 }
@@ -39,7 +38,7 @@ export function UpadateCompanyComponent({
               companyInfoMutate();
             }}
             className={`
-            ${companyInfoIsLoading && "animate-"}
+            ${companyInfoIsLoading && "animate-pulse"}
             bg-desaturatedDarkCyan py-1 text-white font-semibold text-[13px] rounded-md w-[100px] h-auto shadow-md hover:shadow:none hover:brightness-[.90]`}
           />
           <ButtonComponent

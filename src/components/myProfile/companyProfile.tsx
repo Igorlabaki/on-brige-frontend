@@ -4,18 +4,24 @@ import { JobComponent } from "../jobs/job";
 import { CardComponent } from "../util/card";
 import { BsPlusCircle } from "react-icons/BS";
 import { AvatarComponent } from "../util/avatar";
+import { ButtonComponent } from "../util/button";
 import { FaReact, FaUserEdit } from "react-icons/fa";
+import { AvatarModalComponent } from "../modals/avatarModal";
+import useModalsContext from "../../hooks/useModalsContext";
 import { UpadateCompanyComponent } from "./upadateCompanyInfo";
 import { Job } from "../../context/contextRepositories/IJobContext";
 import { useRecoverUserData } from "../../hooks/auth/recoveryUserData";
-import { ButtonComponent } from "../util/button";
-import useModalsContext from "../../hooks/useModalsContext";
+import { NewJobModalCompoent } from "../modals/newJobModal";
 
 export function CompanyProfileComponent() {
   const { authUser } = useRecoverUserData();
   const [isEditModeTrue, setIsEditModeTrue] = useState(false);
-  const { isNewJobModalOpen, handleOpenNewJobModal, isUpdateJobModalOpen } =
-    useModalsContext();
+  const {
+    handleOpenAvatarModal,
+    handleOpenNewJobModal,
+    isAvatarModalOpen,
+    isNewJobModalOpen,
+  } = useModalsContext();
 
   function handleEditModeCLose() {
     setIsEditModeTrue(false);
@@ -28,14 +34,16 @@ export function CompanyProfileComponent() {
   return (
     <div className="mt-10">
       <CardComponent>
-        <AvatarComponent
-          onClick={() => {}}
-          avatar={authUser?.avatar}
-          entityName={"company"}
-          icon={
-            <FaReact className="text-veryDarkGraishCyan text-[30px] md:text-[35px]" />
-          }
-        />
+        <div className="absolute top-[3.5rem] md:relative md:top-0">
+          <AvatarComponent
+            onClick={() => handleOpenAvatarModal && handleOpenAvatarModal()}
+            avatar={authUser?.avatar}
+            entityName={"developer"}
+            icon={
+              <FaReact className="text-veryDarkGraishCyan text-[30px] md:text-[35px]" />
+            }
+          />
+        </div>
         <div className="w-full">
           {isEditModeTrue ? (
             <UpadateCompanyComponent
@@ -107,6 +115,8 @@ export function CompanyProfileComponent() {
           return <JobComponent job={job} key={job.id} />;
         })}
       </div>
+      {isAvatarModalOpen && <AvatarModalComponent />}
+      {isNewJobModalOpen && <NewJobModalCompoent />}
     </div>
   );
 }

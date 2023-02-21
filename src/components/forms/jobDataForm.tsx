@@ -1,58 +1,74 @@
 import { IoIosClose } from "react-icons/io";
-import { ErrorAuth } from "../../Interfaces";
-import React, { useState, useEffect } from "react";
 import { ButtonComponent } from "../util/button";
 import useErrors from "../../functions/useErrors";
+import React, { useState, useEffect } from "react";
 import SelectItemsComponent from "../util/selectItems";
-import { RegisterReqBody } from "../modals/newJobModal";
 import { CountryListComponent } from "../util/countryList";
 import useModalsContext from "../../hooks/useModalsContext";
 import useCreateNewJob from "../../hooks/job/useCreateNewJob";
+import useUpdateNewJob from "../../hooks/job/useUpdateNewJob";
 import { useRecoverUserData } from "../../hooks/auth/recoveryUserData";
+import {
+  ErrorAuth,
+  RegisterJobReqBody,
+  UpdateJobReqBody,
+} from "../../Interfaces";
+import useGetjobById from "../../hooks/job/useGetJobById";
 import { Job } from "../../context/contextRepositories/IJobContext";
+import { RiCloseFill } from "react-icons/ri";
 
 interface JobDataFormProps {
   title: string;
-  job?: RegisterReqBody;
+  job?: any;
+  onClose?: () => void;
 }
 
-export default function JobDataFormComponent({ title, job }: JobDataFormProps) {
+export default function JobDataFormComponent({
+  title,
+  job,
+  onClose,
+}: JobDataFormProps) {
   const { authUser } = useRecoverUserData();
   const { errors, setError, removeError } = useErrors();
-  const { handleCloseNewJobModal } = useModalsContext();
+  const { handleCloseNewJobModal, handleCloseUpdateJobModal } =
+    useModalsContext();
+
+  const updateReqBody: UpdateJobReqBody = {
+    jobId: job?.id,
+    about: job?.about,
+    area: job?.area.name,
+    level: job?.level.name,
+    period: job?.period.name,
+    cityName: job?.City?.name,
+    companyId: job?.companyId,
+    countryName: job?.Country?.name,
+    minimumPercentagem: job?.minimumPercentagem,
+    skills: job?.Skills?.map((item: any) => item?.skill?.name) || [],
+  };
+
   const defaultReqBody = {
     companyId: authUser?.id,
+    jobId: "",
     area: "",
     about: "",
     level: "",
     period: "",
     cityName: "",
     countryName: "",
-    minimumPercentagem: "50",
+    minimumPercentagem: "",
+    skills: [],
   };
-  const [registerReqBody, setRegisterReqBody] = useState<RegisterReqBody>(
-    job ? job : defaultReqBody
+  const [registerReqBody, setRegisterReqBody] = useState<RegisterJobReqBody>(
+    job ? updateReqBody : defaultReqBody
   );
-  const {
-    createNewJob,
-    isErrorNewJob,
-    newJobError,
-    isNewJobIsLoading,
-    newJobStatus,
-  } = useCreateNewJob(registerReqBody);
 
-  function handleChangeInput(event: any) {
-    const field = event.target.name;
-    const value = event.target.value;
+  const { createNewJob, isErrorNewJob, newJobError, isNewJobIsLoading } =
+    useCreateNewJob(registerReqBody);
 
-    setRegisterReqBody({ ...registerReqBody, [field]: value });
+  const { updateJobMutate, isupdateJobIsLoading } =
+    useUpdateNewJob(registerReqBody);
 
-    if (!value) {
-      setError({ field: field, message: `${field} is required` });
-    } else {
-      removeError(field);
-    }
-  }
+  const [selectSkill, setSelectSkill] = useState<string>();
 
   useEffect(() => {
     if (isErrorNewJob) {
@@ -61,6 +77,7 @@ export default function JobDataFormComponent({ title, job }: JobDataFormProps) {
       setTimeout(() => removeError(messageError), 2000);
     }
   }, [isErrorNewJob]);
+
   return (
     <div
       className="bg-white  flex justify-start items-center flex-col relative
@@ -70,7 +87,10 @@ export default function JobDataFormComponent({ title, job }: JobDataFormProps) {
         <IoIosClose
           size={25}
           className={"text-desaturatedDarkCyan cursor-pointer"}
-          onClick={() => handleCloseNewJobModal && handleCloseNewJobModal()}
+          onClick={() => {
+            handleCloseNewJobModal && handleCloseNewJobModal();
+            handleCloseUpdateJobModal && handleCloseUpdateJobModal();
+          }}
         />
       </div>
       <div className="flex flex-col justify-center items-center">
@@ -134,7 +154,7 @@ export default function JobDataFormComponent({ title, job }: JobDataFormProps) {
                   }
                   value={registerReqBody?.about}
                   onChange={(e) =>
-                    setRegisterReqBody((prev) => ({
+                    setRegisterReqBody((prev: any) => ({
                       ...prev,
                       about: e.target.value,
                     }))
@@ -143,22 +163,162 @@ export default function JobDataFormComponent({ title, job }: JobDataFormProps) {
               </div>
             </div>
           </div>
+          <form
+            className="flex justify-start items-center w-full gap-x-1"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!selectSkill) {
+                return;
+              }
+
+              if (registerReqBody?.skills?.length === 0) {
+                setRegisterReqBody((prev) => ({
+                  ...prev,
+                  skills: [selectSkill],
+                }));
+              } else {
+                if (
+                  registerReqBody?.skills?.find(
+                    (item: any) =>
+                      item?.toLowerCase() === selectSkill?.toLowerCase()
+                  )
+                ) {
+                  return;
+                }
+                setRegisterReqBody((prevState: any) => ({
+                  ...prevState,
+                  skills: [...registerReqBody?.skills, selectSkill],
+                }));
+              }
+              setSelectSkill("");
+            }}
+          >
+            <p className="text-desaturatedDarkCyan  text-sm">Skills:</p>
+            <div className="flex gap-x-1 w-full">
+              <input
+                type="text"
+                className="flx-1 bg-LightGrayishCyan outline-none rounded-md w-[100%] px-2 h-6 text-sm  text-desaturatedDarkCyan flex-1 "
+                value={selectSkill}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setSelectSkill(e.target.value);
+                }}
+              />
+            </div>
+            <p
+              onClick={() =>
+                setRegisterReqBody((prevState: any) => ({
+                  ...prevState,
+                  skills: [],
+                }))
+              }
+              className={`
+                cursor-pointer font-semibold text-[14px] text-desaturatedDarkCyan hover:underline`}
+            >
+              Clear
+            </p>
+          </form>
         </div>
+        <div
+          className={`
+            mt-3 flex justify-start items-center flex-wrap gap-x-[10px] gap-y-2 px-4 my-4 w-[400px]`}
+        >
+          {registerReqBody?.skills?.map((skill: any, i: number) => {
+            return (
+              <div
+                key={i}
+                className={`${
+                  job?.Skills?.map((item: any) => item.skill.name).includes(
+                    skill
+                  )
+                    ? "bg-LightGrayishCyan text-desaturatedDarkCyan"
+                    : "bg-gray-200 text-gray-500"
+                }
+                       shadow-md text-sm min-w-[90px]  h-6 overflow-hidden flex justify-between items-center rounded-sm`}
+              >
+                <p className="px-1 text-[13px] font">{skill}</p>
+                <div
+                  className={`
+                    ${
+                      job?.Skills?.map((item: any) => item.skill.name).includes(
+                        skill
+                      )
+                        ? "bg-desaturatedDarkCyan text-desaturatedDarkCyan"
+                        : "bg-gray-400 text-gray-500"
+                    }
+                  text-desaturatedDarkCyan bg-desaturatedDarkCyan hover:bg-veryDarkGraishCyan w-[20px] cursor-pointer flex justify-center items-center`}
+                >
+                  <RiCloseFill
+                    color="white"
+                    size={24}
+                    onClick={() => {
+                      setRegisterReqBody((prevState: any) => ({
+                        ...prevState,
+                        skills: registerReqBody?.skills?.filter(
+                          (item: any) => item != skill
+                        ),
+                      }));
+                    }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {registerReqBody?.skills?.length > 0 && (
+          <>
+            <div className="flex gap-x-1  w-[90%] mb-2">
+              <p
+                className={`
+            cursor-pointer text-[14px] text-desaturatedDarkCyan hover:underline`}
+              >
+                Min. skills:
+              </p>
+              <div className="relative">
+                <input
+                  className="flx-1 bg-LightGrayishCyan outline-none rounded-md w-[50px] pl-2  h-6 text-sm  text-desaturatedDarkCyan flex-1 "
+                  type="number"
+                  id="amount"
+                  name="amount"
+                  max={100}
+                  min={0}
+                  value={registerReqBody?.minimumPercentagem}
+                  onChange={(e) => {
+                    setRegisterReqBody((prevState: any) => ({
+                      ...prevState,
+                      minimumPercentagem: e.target.value,
+                    }));
+                  }}
+                />
+                <p className="text-desaturatedDarkCyan font-semibold absolute top-0 right-1">
+                  %
+                </p>
+              </div>
+            </div>
+          </>
+        )}
         <div className={`flex w-full space-x-1`}>
           <ButtonComponent
-            title={isNewJobIsLoading ? "Loading..." : "Save"}
-            disabled={isNewJobIsLoading ? true : false}
+            title={
+              isNewJobIsLoading || isupdateJobIsLoading ? "Loading..." : "Save"
+            }
+            disabled={isNewJobIsLoading || isupdateJobIsLoading ? true : false}
             className="bg-desaturatedDarkCyan rounded-md text-sm text-white py-2 flex-1 w-[100px]"
             onClick={() => {
-              createNewJob();
-              setRegisterReqBody(() => ({
-                ...defaultReqBody,
-              }));
+              if (title.includes("Create")) {
+                createNewJob();
+                handleCloseNewJobModal && handleCloseNewJobModal();
+                setRegisterReqBody(() => ({
+                  ...registerReqBody,
+                }));
+              } else {
+                updateJobMutate();
+              }
             }}
           />
           <ButtonComponent
             title="Cancel"
-            disabled={isNewJobIsLoading ? true : false}
+            disabled={isNewJobIsLoading || isupdateJobIsLoading ? true : false}
             className="bg-red-300 rounded-md text-sm text-white py-2 flex-1 w-[100px]"
             onClick={() => {
               handleCloseNewJobModal && handleCloseNewJobModal();

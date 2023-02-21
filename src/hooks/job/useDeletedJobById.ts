@@ -2,10 +2,10 @@ import { parseCookies } from "nookies";
 import { api } from "../../service/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export default function useUpadateCompanyInfo(jobId: string){
+export function useDeleteJob(jobId: string){
     const queryClient = useQueryClient();
     const { "auth.token": token } = parseCookies();
-
+   
     const {
         data: jobDeleted,
         isError: errorjobDeleted,

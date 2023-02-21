@@ -15,7 +15,7 @@ export default function HeaderMenuModal() {
     <ModalComponent
       onClose={() => handleCloseHeaderMenuModal && handleCloseHeaderMenuModal()}
       styleExternal={`bg-transparent`}
-      styleInternal={`bg-white absolute top-[5.5rem] right-[6.2rem] rounded-b-md rounded-tl-md overflow-hidden`}
+      styleInternal={`bg-white absolute top-[6.2rem] right-[7rem] rounded-b-md rounded-tl-md overflow-hidden`}
     >
       <div
         className="

@@ -41,11 +41,18 @@ export default function SelectItemsComponent({
                 <div
                   className={`h-[12px] w-[12px] rounded-full
                    ${
-                     type?.includes(item)
+                     type == item
                        ? "border-[1px] border-darkGrayishYan bg-desaturatedDarkCyan"
                        : "bg-gray-200"
                    }
                   `}
+                  tabIndex={0}
+                  onFocus={() => {
+                    setType((prev: any) => ({
+                      ...prev,
+                      [field]: item,
+                    }));
+                  }}
                   onClick={() => {
                     if (item === type) {
                       setType(() => "");

@@ -10,13 +10,34 @@ import { ImageComponent } from "../../components/util/image";
 import { Job } from "../../context/contextRepositories/IJobContext";
 import useGetCompanyById from "../../hooks/company/useGetCompanyById";
 import { LoadingCompanyDataComponent } from "../../components/companies/loadingCompanyData";
+import { AvatarComponent } from "../../components/util/avatar";
+import { useRecoverUserData } from "../../hooks/auth/recoveryUserData";
 
 export default function UserIdPage() {
   const {
     query: { companyId },
+    push,
   } = useRouter();
-
+  const { authUser } = useRecoverUserData();
   const { companyById, companyByIdIsLoading } = useGetCompanyById(companyId);
+
+  const userSklls = authUser?.Skills?.map((item: any) => item.skill.name);
+
+  function percentageJob(list: any) {
+    return list?.map((job: any) => {
+      let percentageMatch = 0;
+      let matchSkills = job?.Skills?.filter(
+        (item: any) => !userSklls?.includes(item.skill.name)
+      );
+      if (matchSkills && job?.Skills) {
+        const x = job.Skills.length - matchSkills?.length;
+        const skilssMatch = (x * 100) / job?.Skills?.length;
+        percentageMatch = skilssMatch | 0;
+      }
+
+      return { job: job, percentageMatch: percentageMatch };
+    });
+  }
 
   return (
     <LayoutComponent>
@@ -25,27 +46,14 @@ export default function UserIdPage() {
       ) : (
         <div className="mt-10">
           <CardComponent>
-            <div className={`absolute md:relative`}>
-              {companyById?.avatar ? (
-                <ImageComponent
-                  alt="brand"
-                  src={companyById?.avatar}
-                  h="h-[100px]"
-                  w="h-[1000px]"
-                />
-              ) : (
-                <div
-                  className="
-            h-16 w-16 cursor-pointer bg-gray-200 rounded-full flex 
-            justify-center items-center  overflow-hidden 
-            md:h-20 md:w-20 mr-5 absolute bottom-[3.0rem] 
-            md:relative md:bottom-0 shadow-lg
-            "
-                >
-                  <FaReact className="text-veryDarkGraishCyan text-[30px] md:text-[35px]" />
-                </div>
-              )}
-            </div>
+            <AvatarComponent
+              onClick={() => push(`/company/${companyById?.id}`)}
+              avatar={companyById?.avatar}
+              entityName={"company"}
+              icon={
+                <FaReact className="text-veryDarkGraishCyan text-[30px] md:text-[35px]" />
+              }
+            />
             <div className="w-full">
               <div className="w-full flex justify-between items-center text-desaturatedDarkCyan mt-12 md:mt-3">
                 <p className="text-2xl text-veryDarkGraishCyan">
@@ -68,7 +76,7 @@ export default function UserIdPage() {
               )}
               <div className="w-full">
                 {companyById?.about && (
-                  <div className="flex flex-col  justify-center items-start w-full gap-y-2 w-full">
+                  <div className="flex flex-col  justify-center items-start w-full gap-y-2">
                     <p className="text-[15px] text-desaturatedDarkCyan">
                       About:
                     </p>
@@ -87,9 +95,19 @@ export default function UserIdPage() {
             </div>
           </div>
           <div className="flex flex-col gap-5 mt-5">
-            {companyById?.Jobs?.map((job: Job) => {
-              return <JobComponent job={job} key={job.id} />;
-            })}
+            {authUser.userType === "developer"
+              ? percentageJob(companyById?.Jobs)?.map((item: any) => {
+                  return (
+                    <JobComponent
+                      job={item.job}
+                      key={item.job.id}
+                      percentageMatch={item.percentageMatch}
+                    />
+                  );
+                })
+              : companyById?.Jobs?.map((job: Job) => {
+                  return <JobComponent job={job} key={job.id} />;
+                })}
           </div>
         </div>
       )}

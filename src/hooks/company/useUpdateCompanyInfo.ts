@@ -1,12 +1,9 @@
 import { parseCookies } from "nookies";
 import { api } from "../../service/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import useModalsContext from "../useModalsContext";
-
 interface bodyReqUpdateCompanyInfo{
     companyId: string | undefined , name: string | undefined,about: string | undefined,email: string | undefined,cityName: string | undefined,countryName: string | undefined
 }
-
 interface UseUpadateCompanyInfoProps{
     bodyReq:bodyReqUpdateCompanyInfo,
     handleClose?: () =>  void;

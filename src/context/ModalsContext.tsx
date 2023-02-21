@@ -53,6 +53,31 @@ export function ModalsProvider({ children }: any) {
   }
   //
 
+  // Job  modal
+  const [iJobMenuModalOpen, setIJobMenuModalOpen] = useState<boolean>(false);
+
+  function handleOpenJobMenuModal() {
+    setIJobMenuModalOpen(() => true);
+  }
+
+  function handleCloseJobMenuModal() {
+    setIJobMenuModalOpen(() => false);
+  }
+  //
+
+  // skillMatcth  modal
+  const [iSkillMatchModalOpen, setISkillMatchModalOpen] =
+    useState<boolean>(false);
+
+  function handleOpenSkillMatchModal() {
+    setISkillMatchModalOpen(() => true);
+  }
+
+  function handleCloseSkillMatchModal() {
+    setISkillMatchModalOpen(() => false);
+  }
+  //
+
   // Avatar Modal
   const [isAvatarModalOpen, setIsOpenAvatarModal] = useState(false);
 
@@ -84,9 +109,17 @@ export function ModalsProvider({ children }: any) {
         handleOpenNewJobModal,
         handleCloseNewJobModal,
 
+        iSkillMatchModalOpen,
+        handleOpenSkillMatchModal,
+        handleCloseSkillMatchModal,
+
         isUpdateJobModalOpen,
         handleOpenUpdateJobModal,
         handleCloseUpdateJobModal,
+
+        iJobMenuModalOpen,
+        handleOpenJobMenuModal,
+        handleCloseJobMenuModal,
 
         isAvatarModalOpen,
         handleOpenAvatarModal,

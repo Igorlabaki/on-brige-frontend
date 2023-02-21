@@ -1,12 +1,12 @@
 import { parseCookies } from "nookies";
-import { useMutation } from "@tanstack/react-query";
 import { api } from "../../service/axios";
-import { RegisterReqBody } from "../../components/modals/newJobModal";
 import queryClient from "../../service/query";
 import useModalsContext from "../useModalsContext";
-import { IUpdatejob } from "../../Interfaces";
+import { useMutation } from "@tanstack/react-query";
+import { UpdateJobReqBody } from "../../Interfaces";
+import { Console } from "console";
 
-export default function useUpdateNewJob(updateJobReqBody: IUpdatejob){
+export default function useUpdateNewJob({about,area,cityName,companyId,countryName,jobId,level,minimumPercentagem,period,skills}: UpdateJobReqBody){
     const { "auth.token": token } = parseCookies();
     const { handleCloseNewJobModal} = useModalsContext()
     const {
@@ -18,8 +18,8 @@ export default function useUpdateNewJob(updateJobReqBody: IUpdatejob){
       } = useMutation({
         mutationFn: () => {
           return   api
-          .post("/job/update", {
-            updateJobReqBody
+          .put("/job/update", {
+            about,area,cityName,companyId,countryName,jobId,level,minimumPercentagem,period,skills
           }, {
               headers: {
               Authorization: `Bearer ${token}`,

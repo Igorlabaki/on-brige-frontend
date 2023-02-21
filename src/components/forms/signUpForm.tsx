@@ -17,9 +17,6 @@ export function SignUpFormComponent() {
   const { errors, setError, removeError } = useErrors();
   const [showPassword, setShowPassword] = useState(false);
   const { setmodeAuthModal, modeAuthModal } = useModalsContext();
-  const [area, setArea] = useState<string | undefined>();
-  const [level, setLevel] = useState<string | undefined>();
-  const [userType, setUserType] = useState<string | undefined>();
   const [loginRequestBody, setLoginRequestBody] =
     useState<IRegisterRequestBody>({
       email: "",
@@ -96,7 +93,7 @@ export function SignUpFormComponent() {
         title="Type account"
         type={loginRequestBody.userType}
         field={"userType"}
-        setType={setUserType}
+        setType={setLoginRequestBody}
         listOptions={["developer", "company"]}
         handleHidden={true}
       />
@@ -104,17 +101,17 @@ export function SignUpFormComponent() {
         title="Select your level"
         type={loginRequestBody.level}
         field={"level"}
-        setType={setLevel}
+        setType={setLoginRequestBody}
         listOptions={["Intern", "Junior", "Middle", "Senior", "Specialist"]}
-        handleHidden={modeSignUp && userType === "developer"}
+        handleHidden={modeSignUp && loginRequestBody.userType === "developer"}
       />
       <SelectItemsComponent
         title="Select your area"
         field={"area"}
         type={loginRequestBody.area}
-        setType={setArea}
+        setType={setLoginRequestBody}
         listOptions={["Frontend", "Backend", "FullStack"]}
-        handleHidden={modeSignUp && userType === "developer"}
+        handleHidden={modeSignUp && loginRequestBody.userType === "developer"}
       />
       <div className="">
         <div className="flex space-x-1 my-2">
@@ -148,7 +145,7 @@ export function SignUpFormComponent() {
       shadow-lg  text-white text-[1.1rem] 
         flex justify-center items-center rounded-lg space-x-2 p-2  
         ${
-          errors?.length > 0 || !userType
+          errors?.length > 0 || !loginRequestBody.userType
             ? "bg-LightGrayishCyan text-gray-400"
             : "hover:scale-105 transform-all duration-300 hover:brightness-110"
         }

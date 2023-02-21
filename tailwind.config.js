@@ -47,7 +47,7 @@ module.exports = {
 			}
 		  },
 		  animation: {
-			'openOpacity': 'openEffect 0.5s linear',
+			'openOpacity': 'openEffect 1s linear',
 			'closeAuthMenu': 'closeEffect 2s linear',
 			'openItems': 'openItems 0.5s linear',
 			'closeCart': 'closeCartEffect 0.2s linear',

@@ -2,7 +2,7 @@ import React from "react";
 
 export function LoadingDeveloperDataComponent() {
   return (
-    <div className="w-full gap-y-2 flex flex-col mt-8">
+    <div className="w-full flex flex-col mt-8  gap-y-14 lg:gap-y-2">
       <div className="flex justify-between">
         <div className="bg-gray-200 animate-pulse w-[100px] h-4 rounded-lg" />
         <div className="bg-gray-200 animate-pulse w-4 h-4 rounded-lg" />

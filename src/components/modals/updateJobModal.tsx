@@ -1,32 +1,26 @@
 import React from "react";
-import { Job } from "../../context/contextRepositories/IJobContext";
-import useModalsContext from "../../hooks/useModalsContext";
-import JobDataFormComponent from "../forms/jobDataForm";
 import { ModalComponent } from "../util/modal";
-import { RegisterReqBody } from "./newJobModal";
-
+import JobDataFormComponent from "../forms/jobDataForm";
+import useModalsContext from "../../hooks/useModalsContext";
+import { Job } from "../../context/contextRepositories/IJobContext";
 interface UpdateJobProps {
   job: Job;
+  handleCloseUpdateJobModal: () => void;
 }
 
-export default function UpdateJobModalComponent({ job }: UpdateJobProps) {
-  const { handleCloseUpdateJobModal } = useModalsContext();
-
-  const updateReqBody: RegisterReqBody = {
-    about: job?.about,
-    area: job?.area,
-    cityName: job?.City?.name,
-    companyId: job?.Company?.id,
-    countryName: job?.Country?.name,
-    level: job?.level,
-    minimumPercentagem: "50",
-  };
-
+export default function UpdateJobModalComponent({
+  job,
+  handleCloseUpdateJobModal,
+}: UpdateJobProps) {
   return (
     <ModalComponent
       onClose={() => handleCloseUpdateJobModal && handleCloseUpdateJobModal()}
     >
-      <JobDataFormComponent title={"Update  job"} job={updateReqBody} />
+      <JobDataFormComponent
+        title={`Update  job`}
+        job={job}
+        onClose={handleCloseUpdateJobModal}
+      />
     </ModalComponent>
   );
 }

@@ -1,6 +1,6 @@
 import jwtDecode from "jwt-decode";
 import { parseCookies } from "nookies";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../service/axios";
 
 export interface ISignInRequestBody {
@@ -10,7 +10,7 @@ export interface ISignInRequestBody {
 
 export function useRecoverUserData(){
     const { "auth.token": token } = parseCookies();
-
+    const queryClient = useQueryClient()
     const {
         data: authUser,
         error: errorAuthUser,
@@ -28,7 +28,11 @@ export function useRecoverUserData(){
         .then((resp) => {
           return resp.data;
         })
-      }
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries(["recoveryAccountData"])
+        queryClient.invalidateQueries(["listjobs"])
+    }
     })
       
     return {authUser, isErrorAuthUser,authUserDataIsLoading, errorAuthUser,token}

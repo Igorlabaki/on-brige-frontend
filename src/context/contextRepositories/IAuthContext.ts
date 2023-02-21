@@ -22,19 +22,5 @@ export interface AuthContextProvider {
 }
 
 export interface IAuthContext {
-  area: string;
-  level: string;
   signOut: () => void;
-  modeSignIn: boolean;
-  modeSignUp: boolean;
-  uploadPhoto: (file: any) => void;
-  recoverUserInformation: () => void
-  authUser: Developer | Company | null;
-  setArea: Dispatch<SetStateAction<string >>
-  setLevel: Dispatch<SetStateAction<string >>
-  signIn: (reference: ILoginRequestBody) => void;
-  userType: "" | "developer" | "company" | undefined;
-  setmodeAuthModal: Dispatch<SetStateAction<"signIn" | "signUp">>;
-  setAuthUser: Dispatch<SetStateAction<Developer | Company | null>>;
-  setUserType: Dispatch<SetStateAction<"developer" | "company" | undefined>>;
 }

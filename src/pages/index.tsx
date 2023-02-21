@@ -1,6 +1,3 @@
-import { parseCookies } from "nookies";
-import { GetServerSideProps } from "next";
-import { AuthToken } from "../Interfaces";
 import { useState, useEffect } from "react";
 import JobListComponent from "../components/jobs";
 import { LayoutComponent } from "../components/layout";
@@ -8,21 +5,13 @@ import { ButtonComponent } from "../components/util/button";
 import CompaniesListComponent from "../components/companies";
 import DeveloperListComponent from "../components/developer";
 import { useRecoverUserData } from "../hooks/auth/recoveryUserData";
-import { useQuery } from "react-query";
 
 export default function Home() {
   const [listMode, setlistMode] = useState<"jobs" | "companies" | "developers">(
     "jobs"
   );
-  /*
-  const { authUserMutate } = useRecoverUserData();
-     const { data } = useQuery(["session"]);
-  const userIsLogged = !!data;
+  const { authUser } = useRecoverUserData();
 
-  useEffect(() => {
-    userIsLogged && authUserMutate();
-  }, [userIsLogged, authUserMutate]);
- */
   return (
     <LayoutComponent>
       <div className="flex gap-x-1 mt-3 w-full">

@@ -31,9 +31,11 @@ export default function HeaderMenu() {
         <ImageComponent
           src={authUser.avatar}
           alt="User avatar"
-          h="h-40px"
-          w="w-40px"
+          h="h-[60px]"
+          w="w-[60px]"
+          imageClassname="rounded-full cursor-pointer"
           containerClassname="rounded-full"
+          onclik={handleOpenHeaderMenuModal}
         />
       ) : (
         <GiHamburgerMenu

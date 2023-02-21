@@ -1,5 +1,4 @@
 
-import Router, { useRouter } from "next/router";
 import { Company } from "../context/contextRepositories/ICompanyContext";
 import { Developer } from "../context/contextRepositories/IDeveloperContext";
 

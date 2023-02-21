@@ -5,14 +5,19 @@ import { ModalsProvider } from "../context/ModalsContext";
 import { SearchContextProvider } from "../context/SearchContext";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthContextProvider } from "../context/AuthContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <SearchContextProvider>
-        <ModalsProvider>
-          <Component {...pageProps} />
-        </ModalsProvider>
+        <AuthContextProvider>
+          <SearchContextProvider>
+            <ModalsProvider>
+              <Component {...pageProps} />
+            </ModalsProvider>
+          </SearchContextProvider>
+        </AuthContextProvider>
       </SearchContextProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

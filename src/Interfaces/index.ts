@@ -40,15 +40,36 @@ export interface CountriesCityies{
 }
 
 
-export interface IUpdatejob{
-    area: string;
-    jobId: string;
-    about: string;
-    level: string;
-    period: string;
-    cityName: string;
-    companyId: string;
-    countryName: string;
-    minimumPercentagem: string;
-  /*   skills:  JobsSkills[]; */
+export interface UpdateJobReqBody{
+    area: string | undefined;
+    jobId: string | undefined;
+    level: string | undefined;
+    about: string | undefined;
+    period: string | undefined;
+    cityName: string | undefined;
+    companyId: string | undefined;
+    countryName: string | undefined;
+    minimumPercentagem: string | undefined;
+    skills: (string | undefined)[]
 }
+
+
+export interface RegisterJobReqBody {
+    area: string | undefined;
+    jobId: string | undefined;
+    level: string | undefined;
+    about: string | undefined;
+    period: string | undefined;
+    cityName: string | undefined;
+    companyId: string | undefined;
+    countryName: string | undefined;
+    minimumPercentagem: string | undefined;
+    skills: (string | undefined)[] | any[]
+  }
+  
+  export type Link = {
+    id: string
+    name: string
+    fk_id_user: string
+  }
+  

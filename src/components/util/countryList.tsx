@@ -36,7 +36,6 @@ export function CountryListComponent({ setState }: Props) {
         onChange={(e: any) => {
           e.preventDefault();
           const countryName = JSON.parse(e.target.value);
-          console.log(countryName.country);
           setState((prev: any) => ({
             ...prev,
             countryName: countryName.country,

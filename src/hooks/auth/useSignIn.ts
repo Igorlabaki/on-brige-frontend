@@ -19,7 +19,7 @@ export function useSignIn({ email, password,userType}: ISignInRequestBody){
         isLoading: authUserTokenIsLoading,
         mutate: signIn
     } =  useMutation({
-        mutationFn: async () => {
+        mutationFn:  () => {
           return api.post("/auth/authenticateAccount", {
                 email,
                 password,
